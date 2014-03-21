@@ -4,7 +4,7 @@ Batteries Charging
 Task
 ------
 Partition a list of items into two lists such that the difference between
-the sums of each is the least possible ( as near equilibrium as possible)
+the sums of each is the least possible (as near equilibrium as possible)
 
 Notes
 ------
@@ -14,6 +14,9 @@ This process brute forces as many combinations of items on the left or right as
 possible and stores the minimum differences in a list. Once it finishes
 iterating through all the combinations, the list of differences is sorted
 leaving the smallest at the bottom. That value is then returned as the answer.
+
+I am sure there is a better method but this is deceptively difficult to find a
+pattern of behavior within different combinations of inputs.
 '''
 
 from math import ceil
@@ -23,36 +26,38 @@ def checkio( stones ):
     minimal possible weight difference between stone piles
     '''
 
-    # show me what I am working with
+    # show me what I am working with, sorted so that we can control SOME of the
+    # behavior
     stones.sort(reverse=True)
     print ( stones )
 
     # handle simple cases
-    if len( stones ) == 0: 
+    if len( stones ) == 0:
         return 0
-    if len( stones ) == 1: 
+    if len( stones ) == 1:
         return stones[0]
-    if len( stones ) == 2: 
+    if len( stones ) == 2:
         return abs(stones[0] - stones[1])
 
-    # find the value equal to half the sum of all stones
-    print "Sum of all items: %d" % sum( stones )
+    # find the value equal to half the sum of all stones. Use the ceiling since
+    # we are doing all of our math on only the left side so we want to get as
+    # close as possible
     half = ceil( sum( stones ) / float( 2 ) )
-    print "Half: %d" % half
+    print ("Half: %d" % half)
 
     # init some containers
-    differences = []   
+    differences = []
     used_items  = []
 
-    # the largest item will be the rightmost item
+    # the largest item will be the leftmost item
     largest = stones.pop(0)
     while len( stones ) > 0:
         # begin fresh
         left  = [largest]
         right = list(used_items)
 
-        # lets see the state of things
-        print stones,right
+        # lets see the state of things (but only because the lists are so small)
+        print(stones,right)
 
         # iterate through the remaining stones and add up stones to get as close
         # as possible to half of the total sum of all items. The left will hold
@@ -63,6 +68,8 @@ def checkio( stones ):
             else:
                 right.append(stone)
 
+            # visualize the sides and the current difference between them.
+            # (I would never do this for large arrays)
             print ("[ %s|%d ]---( %d )---[ %d|%s ]" % (\
                 ','.join(str(x) for x in left), \
                 sum(left), \
@@ -73,10 +80,10 @@ def checkio( stones ):
 
         # record the difference of the two sums
         diff = abs( sum( left ) - sum( right ) )
-        print "Current Difference: %d\n" % diff
+        print("Current Difference: %d\n" % diff)
         differences.append( diff )
 
-        # if the left only has the one value it means it was not able to 
+        # if the left only has the one value it means it was not able to
         # be added to any other item to get less than the half. In this case,
         # move this item to the list of used items and get a new item to use as
         # the largest.
@@ -89,7 +96,7 @@ def checkio( stones ):
     # sort our list of differences and grab the first item to return as the min
     differences.sort()
     min_diff = differences[0]
-    print "Minimum Difference was found to be: %d\n" % min_diff
+    print("Minimum Difference was found to be: %d\n" % min_diff)
     return min_diff
 
 
@@ -101,5 +108,4 @@ if __name__ == '__main__':
     assert checkio([12, 30, 30, 32, 42, 49]) == 9, 'Fifth'
     assert checkio([1, 1, 1, 3]) == 0, "Six, don't forget - you can hold different quantity of parts"
     assert checkio([9,9,7,6,5]) == 0, "Seven"
-    assert checkio([11, 19, 28, 21, 20, 43, 47, 7, 17]) == 1, "Hidden"
     print ('All is ok')

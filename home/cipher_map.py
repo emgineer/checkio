@@ -7,7 +7,14 @@ decryption.
 
 '''
 
-from numpy import rot90
+def rotate(matrix):
+    new  = [['','','',''],['','','',''],['','','',''],['','','','']]
+    rows = 3 # hard coded
+    for i,row in enumerate(matrix):
+        for j,char in enumerate(row):
+            new[j][rows-i] = char
+
+    return new
 
 def checkio(input_data):
     'Return password of given cipher map'
@@ -24,11 +31,9 @@ def checkio(input_data):
                 if char == 'X':
                     password += passChars[i][j]
 
-        # rotate 270 degrees counter clockwise = 90 degs clockwise
-        maskChars = rot90(maskChars, 3).copy()
+        maskChars = rotate(maskChars)
         rotations += 1
 
-    print(password)
     return password
 
 if __name__ == '__main__':
@@ -51,4 +56,5 @@ if __name__ == '__main__':
     'rsqx',
     'xqzz',
     'fyzr']]) == 'rxqrwsfzxqxzhczy', 'Second'
+
     print('All ok')
