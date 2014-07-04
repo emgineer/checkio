@@ -13,13 +13,14 @@ def checkio(data):
     if len( data ) >= 10:
         # positive lookahead FTW
         if search(r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$', data):
+            print( 'Success' )
             return True
         else:
-            print ('Password should contain at least on lower case letter, ' +\
+            print ('Failed: Password should contain at least one lower case character, ' +\
                    'one upper case character, and one numeral')
             return False
     else:
-        print("Password should be at least 10 characters")
+        print("Failed: Password should be at least 10 characters")
         return False
 
 if __name__ == '__main__':
